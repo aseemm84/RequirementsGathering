@@ -1,5 +1,6 @@
 from time import sleep
 import cohere
+import streamlit as st
 
 co = cohere.Client(st.secrets["COHERE_API_KEY"])
 def project_manager_agent(project_description, client, temperature):
