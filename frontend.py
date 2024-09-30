@@ -129,8 +129,7 @@ if st.button("Gather Requirements"):
 
             # Process requirements with status updates
             results = backend.process_requirements(
-                project_description, 
-                co,
+                project_description,
                 temp_value,
                 update_status
             )
