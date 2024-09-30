@@ -2,3 +2,4 @@ streamlit
 cohere
 fpdf
 requests
+Pillow
