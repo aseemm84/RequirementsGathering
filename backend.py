@@ -1,7 +1,7 @@
 from time import sleep
 import cohere
 
-
+co = cohere.Client(st.secrets["COHERE_API_KEY"])
 def project_manager_agent(project_description, client, temperature):
     prompt = f"""As a project manager, provide detailed instructions for gathering initial requirements for this project:
 
