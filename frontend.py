@@ -95,7 +95,7 @@ with st.sidebar:
 # Main content
 col1, col2 = st.columns([1, 4])
 logo = Image.open("logo.png")
-col1.image(logo, width=200)
+col1.image(logo, width=150)
 col2.title("Vision Forge: Crafting Project Foundations")
 
 project_description = st.text_area("Describe your project:", height=200)
