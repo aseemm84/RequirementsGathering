@@ -15,8 +15,15 @@ Your task:
 5. Suggest any potential challenges or considerations
 
 Please provide a structured response with clear headings and bullet points."""
-    response = client.generate(model="command-r-plus", prompt=prompt, temperature=temperature)
-    return response.generations[0].text
+    try:
+        response = co.chat(
+            model="command-r-plus",
+            message= prompt,
+            temperature=temperature
+        )
+        return response.text
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 def stakeholder_interview_agent(instructions, client, temperature):
     prompt = f"""As a stakeholder interviewer, conduct simulated interviews based on these instructions and provide initial requirements:
@@ -33,8 +40,15 @@ Your task:
 4. Highlight any conflicting requirements between stakeholders
 
 Please provide a structured response with clear headings for each stakeholder and a summary section."""
-    response = client.generate(model="command-r-plus", prompt=prompt, temperature=temperature)
-    return response.generations[0].text
+    try:
+        response = co.chat(
+            model="command-r-plus",
+            message= prompt,
+            temperature=temperature
+        )
+        return response.text
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 def requirements_analyzer_agent(initial_requirements, client, temperature):
     prompt = f"""As a requirements analyzer, refine and categorize these initial requirements:
@@ -56,8 +70,15 @@ Your task:
 4. Suggest 3-5 additional requirements that might have been overlooked
 
 Please provide a structured response with clear headings for each category and a summary of key findings."""
-    response = client.generate(model="command-r-plus", prompt=prompt, temperature=temperature)
-    return response.generations[0].text
+    try:
+        response = co.chat(
+            model="command-r-plus",
+            message= prompt,
+            temperature=temperature
+        )
+        return response.text
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 def documentation_agent(refined_requirements, client, temperature):
     prompt = f"""As a documentation specialist, compile a final requirements document based on these refined requirements:
@@ -76,8 +97,15 @@ Your task:
 6. Include a section on future considerations or potential enhancements
 
 Please format the document with clear headings, subheadings, and use bullet points or numbered lists where appropriate."""
-    response = client.generate(model="command-r-plus", prompt=prompt, temperature=temperature)
-    return response.generations[0].text
+    try:
+        response = co.chat(
+            model="command-r-plus",
+            message= prompt,
+            temperature=temperature
+        )
+        return response.text
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 def process_requirements(project_description, client, temperature, status_callback):
     try:
