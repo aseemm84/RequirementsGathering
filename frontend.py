@@ -94,7 +94,7 @@ with st.sidebar:
 
 # Main content
 col1, col2 = st.columns([1, 4])
-logo = Image.open("static/logo.png")
+logo = Image.open("logo.png")
 col1.image(logo, width=200)
 col2.title("Vision Forge: Crafting Project Foundations")
 
