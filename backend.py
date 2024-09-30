@@ -3,7 +3,7 @@ import cohere
 import streamlit as st
 
 co = cohere.Client(st.secrets["COHERE_API_KEY"])
-def project_manager_agent(project_description, client, temperature):
+def project_manager_agent(project_description, temperature):
     prompt = f"""As a project manager, provide detailed instructions for gathering initial requirements for this project:
 
 Project Description: {project_description}
@@ -26,7 +26,7 @@ Please provide a structured response with clear headings and bullet points."""
     except Exception as e:
         return f"Error: {str(e)}"
 
-def stakeholder_interview_agent(instructions, client, temperature):
+def stakeholder_interview_agent(instructions, temperature):
     prompt = f"""As a stakeholder interviewer, conduct simulated interviews based on these instructions and provide initial requirements:
 
 Instructions: {instructions}
@@ -51,7 +51,7 @@ Please provide a structured response with clear headings for each stakeholder an
     except Exception as e:
         return f"Error: {str(e)}"
 
-def requirements_analyzer_agent(initial_requirements, client, temperature):
+def requirements_analyzer_agent(initial_requirements, temperature):
     prompt = f"""As a requirements analyzer, refine and categorize these initial requirements:
 
 Initial Requirements: {initial_requirements}
@@ -81,7 +81,7 @@ Please provide a structured response with clear headings for each category and a
     except Exception as e:
         return f"Error: {str(e)}"
 
-def documentation_agent(refined_requirements, client, temperature):
+def documentation_agent(refined_requirements, temperature):
     prompt = f"""As a documentation specialist, compile a final requirements document based on these refined requirements:
 
 Refined Requirements: {refined_requirements}
@@ -108,19 +108,19 @@ Please format the document with clear headings, subheadings, and use bullet poin
     except Exception as e:
         return f"Error: {str(e)}"
 
-def process_requirements(project_description, client, temperature, status_callback):
+def process_requirements(project_description, temperature, status_callback):
     try:
         status_callback("Project Manager Agent: Generating instructions (it may take several minutes)...")
-        pm_instructions = project_manager_agent(project_description, client, temperature)
+        pm_instructions = project_manager_agent(project_description, temperature)
         
         status_callback("Stakeholder Interview Agent: Gathering initial requirements (it may take several minutes)...")
-        initial_requirements = stakeholder_interview_agent(pm_instructions, client, temperature)
+        initial_requirements = stakeholder_interview_agent(pm_instructions, temperature)
         
         status_callback("Requirements Analyzer Agent: Refining and categorizing requirements (it may take several minutes)...")
-        refined_requirements = requirements_analyzer_agent(initial_requirements, client, temperature)
+        refined_requirements = requirements_analyzer_agent(initial_requirements, temperature)
         
         status_callback("Documentation Agent: Compiling final document (it may take several minutes)...")
-        final_document = documentation_agent(refined_requirements, client, temperature)
+        final_document = documentation_agent(refined_requirements, temperature)
 
         return {
             "pm_instructions": pm_instructions,
