@@ -56,10 +56,9 @@ with st.sidebar:
 
     # Response Length (Max Tokens) slider with 12 steps
     token_options = {
-        7000: "Brief",
-        7500: "Moderate",
-        8000: "Somewhat Detailed",
-        9000: "Detailed",
+        5000: "Brief",
+        6500: "Moderate",
+        8000: "Detailed",
         9500: "Extensive"
     }
     token_value = st.select_slider(
