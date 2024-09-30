@@ -6,9 +6,10 @@ from fpdf import FPDF
 import time
 from datetime import datetime
 import requests
+from PIL import Image
 
 # Streamlit page configuration
-st.set_page_config(page_title="Vision Forge: Crafting Project Foundations", layout="wide")
+st.set_page_config(page_title="Vision Forge: Crafting Project Foundations", layout="wide", page_icon="📄")
 
 # Custom CSS to improve the look and feel
 st.markdown("""
@@ -56,18 +57,16 @@ with st.sidebar:
     # Response Length (Max Tokens) slider with 12 steps
     token_options = {
         7000: "Brief",
-        7500: "Somewhat Brief",
-        8000: "Moderate",
-        8500: "Somewhat Detailed",
+        7500: "Moderate",
+        8000: "Somewhat Detailed",
         9000: "Detailed",
-        9500: "Very Detailed",
-        10000: "Extensive",
+        9500: "Extensive"
     }
     token_value = st.select_slider(
         "Response Length",
         options=list(token_options.keys()),
         format_func=lambda x: token_options[x],
-        value=8500
+        value=8000
     )
     st.caption("Adjust this to control how brief or detailed the responses should be.")
     st.markdown("---")
@@ -94,7 +93,10 @@ with st.sidebar:
     st.sidebar.markdown(f'<a href="{linkedin_url}" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn" style="height: 30px;"></a>', unsafe_allow_html=True)
 
 # Main content
-st.title("Vision Forge: Crafting Project Foundations")
+col1, col2 = st.columns([1, 4])
+logo = Image.open("static/logo.png")
+col1.image(logo, width=200)
+col2.title("Vision Forge: Crafting Project Foundations")
 
 project_description = st.text_area("Describe your project:", height=200)
 
