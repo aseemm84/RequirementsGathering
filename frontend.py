@@ -1,5 +1,4 @@
 import streamlit as st
-import cohere
 import backend
 import base64
 from fpdf import FPDF
@@ -30,8 +29,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Initialize Cohere client with API key from secrets and increased timeout
-co = cohere.Client(st.secrets["COHERE_API_KEY"], timeout=3000)  # 50 minutes timeout
+
 
 # Sidebar for advanced options
 with st.sidebar:
