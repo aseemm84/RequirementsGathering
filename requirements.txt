@@ -3,4 +3,4 @@ cohere
 fpdf
 requests
 Pillow
-distutils
+sagemaker
