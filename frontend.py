@@ -71,12 +71,15 @@ with st.sidebar:
     
     # Add a link to more information or your website
     linkedin_url = "https://www.linkedin.com/in/aseem-mehrotra/"
-    st.sidebar.markdown(f'<a href="{linkedin_url}" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn" style="height: 30px;"></a>', unsafe_allow_html=True) 
+    st.sidebar.markdown(f'<a href="{linkedin_url}" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn" style="height: 30px;"></a>', unsafe_allow_html=True)
 
 # Main content
 col1, col2 = st.columns([1, 4])
-logo = Image.open("logo.png") 
-col1.image(logo, width=150)
+try:
+    logo = Image.open("logo.png")
+    col1.image(logo, width=150)
+except FileNotFoundError:
+    st.warning("Logo image not found. Please make sure 'logo.png' exists in the correct directory.")
 col2.title("Vision Forge: Crafting Project Foundations")
 
 project_description = st.text_area("Describe your project:", height=200)
@@ -119,18 +122,13 @@ if st.button("Gather Requirements"):
             # Clear the status placeholder
             status_placeholder.empty()
             
-            # Display results in expandable sections
-            with st.expander("Project Manager Instructions", expanded=True):
-                st.write(results["pm_instructions"])
-            
-            with st.expander("Initial Requirements", expanded=True):
-                st.write(results["initial_requirements"])
-            
-            with st.expander("Refined Requirements", expanded=True):
-                st.write(results["refined_requirements"])
-            
-            st.subheader("Final Requirements Document")
-            st.write(results["final_document"])
+            # Display results and ask for user confirmation or changes
+            for key, value in results.items():
+                st.subheader(key.replace("_", " ").title())
+                st.write(value)
+                if st.button(f"Modify {key.replace('_', ' ').title()}"):
+                    modified_value = st.text_area(f"Please provide your modified {key.replace('_', ' ')}:", value=value)
+                    results[key] = modified_value
             
             # Create downloadable PDF
             pdf = create_pdf(results["final_document"])
