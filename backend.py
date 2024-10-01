@@ -1,10 +1,8 @@
-# backend.py
 from time import sleep
 import cohere
 import streamlit as st
 
 co = cohere.Client(st.secrets["COHERE_API_KEY"])
-
 
 def project_manager_agent(project_description, temperature):
     prompt = f"""As a project manager, provide detailed instructions for gathering initial requirements for this project:
@@ -22,13 +20,12 @@ Please provide a structured response with clear headings and bullet points."""
     try:
         response = co.chat(
             model="command-r-plus",
-            message=prompt,
+            message= prompt,
             temperature=temperature
         )
         return response.text
     except Exception as e:
         return f"Error: {str(e)}"
-
 
 def stakeholder_interview_agent(instructions, temperature):
     prompt = f"""As a stakeholder interviewer, conduct simulated interviews based on these instructions and provide initial requirements:
@@ -48,13 +45,12 @@ Please provide a structured response with clear headings for each stakeholder an
     try:
         response = co.chat(
             model="command-r-plus",
-            message=prompt,
+            message= prompt,
             temperature=temperature
         )
         return response.text
     except Exception as e:
         return f"Error: {str(e)}"
-
 
 def requirements_analyzer_agent(initial_requirements, temperature):
     prompt = f"""As a requirements analyzer, refine and categorize these initial requirements:
@@ -79,13 +75,12 @@ Please provide a structured response with clear headings for each category and a
     try:
         response = co.chat(
             model="command-r-plus",
-            message=prompt,
+            message= prompt,
             temperature=temperature
         )
         return response.text
     except Exception as e:
         return f"Error: {str(e)}"
-
 
 def documentation_agent(refined_requirements, temperature):
     prompt = f"""As a documentation specialist, compile a final requirements document based on these refined requirements:
@@ -107,71 +102,53 @@ Please format the document with clear headings, subheadings, and use bullet poin
     try:
         response = co.chat(
             model="command-r-plus",
-            message=prompt,
+            message= prompt,
             temperature=temperature
         )
         return response.text
     except Exception as e:
         return f"Error: {str(e)}"
 
-
 def process_requirements(project_description, temperature, status_callback):
     try:
-        status_callback(
-            "Project Manager Agent: Generating instructions (it may take several minutes)..."
-        )
-        pm_instructions = project_manager_agent(project_description,
-                                                temperature)
+        status_callback("Project Manager Agent: Generating instructions...")
+        pm_instructions = project_manager_agent(project_description, temperature)
+        
+        # Ask for user confirmation or changes
+        status_callback("Project Manager Instructions:")
+        st.write(pm_instructions)
+        if st.button("Yes, proceed with these instructions"):
+            pass  # Continue with the existing instructions
+        else:
+            modified_instructions = st.text_area("Please provide your modified instructions:", value=pm_instructions)
+            pm_instructions = modified_instructions 
 
-        # --- Modification starts here ---
-        with st.expander("Project Manager Instructions"):
-            st.write(pm_instructions)
-            modify_pm = st.checkbox("Modify Project Manager Instructions?")
-            if modify_pm:
-                new_pm_instructions = st.text_area("Modified Instructions:",
-                                                  value=pm_instructions)
-                pm_instructions = new_pm_instructions
-        # --- Modification ends here ---
+        status_callback("Stakeholder Interview Agent: Gathering initial requirements...")
+        initial_requirements = stakeholder_interview_agent(pm_instructions, temperature)
 
-        status_callback(
-            "Stakeholder Interview Agent: Gathering initial requirements (it may take several minutes)..."
-        )
-        initial_requirements = stakeholder_interview_agent(pm_instructions,
-                                                          temperature)
+        # Ask for user confirmation or changes
+        status_callback("Initial Requirements:")
+        st.write(initial_requirements)
+        if st.button("Yes, proceed with these requirements"):
+            pass  # Continue with the existing requirements
+        else:
+            modified_requirements = st.text_area("Please provide your modified requirements:", value=initial_requirements)
+            initial_requirements = modified_requirements
 
-        # --- Modification starts here ---
-        with st.expander("Initial Requirements"):
-            st.write(initial_requirements)
-            modify_initial = st.checkbox("Modify Initial Requirements?")
-            if modify_initial:
-                new_initial_requirements = st.text_area(
-                    "Modified Initial Requirements:",
-                    value=initial_requirements)
-                initial_requirements = new_initial_requirements
-        # --- Modification ends here ---
+        status_callback("Requirements Analyzer Agent: Refining and categorizing requirements...")
+        refined_requirements = requirements_analyzer_agent(initial_requirements, temperature)
 
-        status_callback(
-            "Requirements Analyzer Agent: Refining and categorizing requirements (it may take several minutes)..."
-        )
-        refined_requirements = requirements_analyzer_agent(
-            initial_requirements, temperature)
+        # Ask for user confirmation or changes
+        status_callback("Refined Requirements:")
+        st.write(refined_requirements)
+        if st.button("Yes, proceed with these requirements"):
+            pass  # Continue with the existing requirements
+        else:
+            modified_requirements = st.text_area("Please provide your modified requirements:", value=refined_requirements)
+            refined_requirements = modified_requirements
 
-        # --- Modification starts here ---
-        with st.expander("Refined Requirements"):
-            st.write(refined_requirements)
-            modify_refined = st.checkbox("Modify Refined Requirements?")
-            if modify_refined:
-                new_refined_requirements = st.text_area(
-                    "Modified Refined Requirements:",
-                    value=refined_requirements)
-                refined_requirements = new_refined_requirements
-        # --- Modification ends here ---
-
-        status_callback(
-            "Documentation Agent: Compiling final document (it may take several minutes)..."
-        )
-        final_document = documentation_agent(refined_requirements,
-                                            temperature)
+        status_callback("Documentation Agent: Compiling final document...")
+        final_document = documentation_agent(refined_requirements, temperature)
 
         return {
             "pm_instructions": pm_instructions,
