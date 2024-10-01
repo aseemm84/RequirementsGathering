@@ -88,7 +88,8 @@ with st.sidebar:
 
 # Main content
 col1, col2 = st.columns([1, 4])
-logo = Image.open("logo.png")  # Replace "logo.png" with the actual path to your logo image
+# Replace "logo.png" with the actual path to your logo image
+logo = Image.open("logo.png")  
 col1.image(logo, width=150)
 col2.title("Vision Forge: Crafting Project Foundations")
 
@@ -125,10 +126,10 @@ if st.button("Gather Requirements"):
 
         # User feedback loop for Project Manager Agent
         while True:
-            user_satisfied = st.radio("Are you satisfied with the Project Manager Instructions?", ["Yes", "No"])
-            if user_satisfied == "Yes":
+            col1, col2 = st.columns(2)
+            if col1.button("Yes", key="pm_yes"):
                 break
-            else:
+            if col2.button("No", key="pm_no"):
                 refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Project Manager Agent:")
                 pm_instructions = backend.project_manager_agent(project_description, temp_value, refinement_instructions=refinement_instructions)
                 st.subheader("Updated Project Manager Instructions:")
@@ -145,10 +146,10 @@ if st.button("Gather Requirements"):
 
         # User feedback loop for Stakeholder Interview Agent
         while True:
-            user_satisfied = st.radio("Are you satisfied with the Initial Requirements?", ["Yes", "No"])
-            if user_satisfied == "Yes":
+            col1, col2 = st.columns(2)
+            if col1.button("Yes", key="si_yes"):
                 break
-            else:
+            if col2.button("No", key="si_no"):
                 refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Stakeholder Interview Agent:")
                 initial_requirements = backend.stakeholder_interview_agent(pm_instructions, temp_value, refinement_instructions=refinement_instructions)
                 st.subheader("Updated Initial Requirements:")
@@ -165,10 +166,10 @@ if st.button("Gather Requirements"):
 
         # User feedback loop for Requirements Analyzer Agent
         while True:
-            user_satisfied = st.radio("Are you satisfied with the Refined Requirements?", ["Yes", "No"])
-            if user_satisfied == "Yes":
+            col1, col2 = st.columns(2)
+            if col1.button("Yes", key="ra_yes"):
                 break
-            else:
+            if col2.button("No", key="ra_no"):
                 refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Requirements Analyzer Agent:")
                 refined_requirements = backend.requirements_analyzer_agent(initial_requirements, temp_value, refinement_instructions=refinement_instructions)
                 st.subheader("Updated Refined Requirements:")
