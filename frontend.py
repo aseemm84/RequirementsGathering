@@ -88,8 +88,7 @@ with st.sidebar:
 
 # Main content
 col1, col2 = st.columns([1, 4])
-# Replace "logo.png" with the actual path to your logo image
-logo = Image.open("logo.png")  
+logo = Image.open("logo.png")  # Replace "logo.png" with the actual path to your logo image
 col1.image(logo, width=150)
 col2.title("Vision Forge: Crafting Project Foundations")
 
@@ -125,15 +124,17 @@ if st.button("Gather Requirements"):
         st.write(pm_instructions)
 
         # User feedback loop for Project Manager Agent
+        pm_count = 0  # Counter for unique keys
         while True:
             col1, col2 = st.columns(2)
-            if col1.button("Yes", key="pm_yes"):
+            if col1.button("Yes", key=f"pm_yes_{pm_count}"):
                 break
-            if col2.button("No", key="pm_no"):
+            if col2.button("No", key=f"pm_no_{pm_count}"):
                 refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Project Manager Agent:")
                 pm_instructions = backend.project_manager_agent(project_description, temp_value, refinement_instructions=refinement_instructions)
                 st.subheader("Updated Project Manager Instructions:")
                 st.write(pm_instructions)
+            pm_count += 1
 
         # --- Stakeholder Interview Agent ---
         status_placeholder = st.empty()
@@ -145,15 +146,17 @@ if st.button("Gather Requirements"):
         st.write(initial_requirements)
 
         # User feedback loop for Stakeholder Interview Agent
+        si_count = 0  # Counter for unique keys
         while True:
             col1, col2 = st.columns(2)
-            if col1.button("Yes", key="si_yes"):
+            if col1.button("Yes", key=f"si_yes_{si_count}"):
                 break
-            if col2.button("No", key="si_no"):
+            if col2.button("No", key=f"si_no_{si_count}"):
                 refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Stakeholder Interview Agent:")
                 initial_requirements = backend.stakeholder_interview_agent(pm_instructions, temp_value, refinement_instructions=refinement_instructions)
                 st.subheader("Updated Initial Requirements:")
                 st.write(initial_requirements)
+            si_count += 1
 
         # --- Requirements Analyzer Agent ---
         status_placeholder = st.empty()
@@ -165,15 +168,17 @@ if st.button("Gather Requirements"):
         st.write(refined_requirements)
 
         # User feedback loop for Requirements Analyzer Agent
+        ra_count = 0  # Counter for unique keys
         while True:
             col1, col2 = st.columns(2)
-            if col1.button("Yes", key="ra_yes"):
+            if col1.button("Yes", key=f"ra_yes_{ra_count}"):
                 break
-            if col2.button("No", key="ra_no"):
+            if col2.button("No", key=f"ra_no_{ra_count}"):
                 refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Requirements Analyzer Agent:")
                 refined_requirements = backend.requirements_analyzer_agent(initial_requirements, temp_value, refinement_instructions=refinement_instructions)
                 st.subheader("Updated Refined Requirements:")
                 st.write(refined_requirements)
+            ra_count += 1
 
         # --- Documentation Agent ---
         status_placeholder = st.empty()
@@ -195,9 +200,4 @@ if st.button("Gather Requirements"):
         end_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         duration = end_time - start_time
 
-        st.success(f"Process completed at: {end_datetime}")
-        st.info(f"Total duration: {duration:.2f} seconds")
-
-# Footer
-st.markdown("---")
-st.markdown("Powered by Cohere and Streamlit")
+        st.success(f"Process completed at: {end
