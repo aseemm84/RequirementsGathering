@@ -3,4 +3,3 @@ cohere
 fpdf
 requests
 Pillow
-distutils
