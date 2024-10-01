@@ -28,15 +28,12 @@ def project_manager_agent(project_description, temperature):
     5. Suggest any potential challenges or considerations
 
     Please provide a structured response with clear headings and bullet points."""
-    try:
-        response = co.chat(
+    response = co.chat(
             model="command-r-plus",
             message=prompt,
             temperature=temperature
         )
-        return response.text
-    except Exception as e:
-        return f"Error: {str(e)}"
+    return response.text
 
 def stakeholder_interview_agent(instructions, temperature):
     """
@@ -63,15 +60,12 @@ def stakeholder_interview_agent(instructions, temperature):
     4. Highlight any conflicting requirements between stakeholders
 
     Please provide a structured response with clear headings for each stakeholder and a summary section."""
-    try:
-        response = co.chat(
+    response = co.chat(
             model="command-r-plus",
             message=prompt,
             temperature=temperature
         )
-        return response.text
-    except Exception as e:
-        return f"Error: {str(e)}"
+    return response.text
 
 def requirements_analyzer_agent(initial_requirements, temperature):
     """
@@ -103,15 +97,12 @@ def requirements_analyzer_agent(initial_requirements, temperature):
     4. Suggest 3-5 additional requirements that might have been overlooked
 
     Please provide a structured response with clear headings for each category and a summary of key findings."""
-    try:
-        response = co.chat(
+    response = co.chat(
             model="command-r-plus",
             message=prompt,
             temperature=temperature
         )
-        return response.text
-    except Exception as e:
-        return f"Error: {str(e)}"
+    return response.text
 
 def documentation_agent(refined_requirements, temperature):
     """
@@ -140,15 +131,12 @@ def documentation_agent(refined_requirements, temperature):
     6. Include a section on future considerations or potential enhancements
 
     Please format the document with clear headings, subheadings, and use bullet points or numbered lists where appropriate."""
-    try:
-        response = co.chat(
+    response = co.chat(
             model="command-r-plus",
             message=prompt,
             temperature=temperature
         )
-        return response.text
-    except Exception as e:
-        return f"Error: {str(e)}"
+    return response.text
 
 def process_requirements(project_description, temperature, status_callback):
     """
@@ -162,24 +150,21 @@ def process_requirements(project_description, temperature, status_callback):
     Returns:
       A dictionary containing the results from each agent.
     """
-    try:
-        status_callback("Project Manager Agent: Generating instructions (it may take several minutes)...")
-        pm_instructions = project_manager_agent(project_description, temperature)
+    status_callback("Project Manager Agent: Generating instructions (it may take several minutes)...")
+    pm_instructions = project_manager_agent(project_description, temperature)
 
-        status_callback("Stakeholder Interview Agent: Gathering initial requirements (it may take several minutes)...")
-        initial_requirements = stakeholder_interview_agent(pm_instructions, temperature)
+    status_callback("Stakeholder Interview Agent: Gathering initial requirements (it may take several minutes)...")
+    initial_requirements = stakeholder_interview_agent(pm_instructions, temperature)
 
-        status_callback("Requirements Analyzer Agent: Refining and categorizing requirements (it may take several minutes)...")
-        refined_requirements = requirements_analyzer_agent(initial_requirements, temperature)
+    status_callback("Requirements Analyzer Agent: Refining and categorizing requirements (it may take several minutes)...")
+    refined_requirements = requirements_analyzer_agent(initial_requirements, temperature)
 
-        status_callback("Documentation Agent: Compiling final document (it may take several minutes)...")
-        final_document = documentation_agent(refined_requirements, temperature)
+    status_callback("Documentation Agent: Compiling final document (it may take several minutes)...")
+    final_document = documentation_agent(refined_requirements, temperature)
 
-        return {
+    return {
             "pm_instructions": pm_instructions,
             "initial_requirements": initial_requirements,
             "refined_requirements": refined_requirements,
             "final_document": final_document
         }
-    except Exception as e:
-        raise Exception(f"Error in requirements gathering process: {str(e)}")
