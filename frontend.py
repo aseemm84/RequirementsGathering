@@ -112,73 +112,56 @@ if st.button("Gather Requirements"):
     if not project_description:
         st.warning("Please enter a project description.")
     else:
-        try:
-            start_time = time.time()
-            start_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            st.info(f"Process started at: {start_datetime}")
+        
+        start_time = time.time()
+        start_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        st.info(f"Process started at: {start_datetime}")
 
-            # Create a placeholder for the status messages
-            status_placeholder = st.empty()
+        # Create a placeholder for the status messages
+        status_placeholder = st.empty()
 
-            # Define a callback function to update the status
-            def update_status(message):
-                status_placeholder.info(message)
+        # Define a callback function to update the status
+        def update_status(message):
+            status_placeholder.info(message)
 
-            # Process requirements with status updates
-            results = backend.process_requirements(
-                project_description,
-                temp_value,
-                update_status
-            )
+        # Process requirements with status updates
+        results = backend.process_requirements(
+            project_description,
+            temp_value,
+            update_status
+        )
 
-            # Clear the status placeholder
-            status_placeholder.empty()
+        # Clear the status placeholder
+        status_placeholder.empty()
 
-            # Display results in expandable sections
-            with st.expander("Project Manager Instructions", expanded=True):
-                st.write(results["pm_instructions"])
+        # Display results in expandable sections
+        with st.expander("Project Manager Instructions", expanded=True):
+            st.write(results["pm_instructions"])
 
-            with st.expander("Initial Requirements", expanded=True):
-                st.write(results["initial_requirements"])
+        with st.expander("Initial Requirements", expanded=True):
+            st.write(results["initial_requirements"])
 
-            with st.expander("Refined Requirements", expanded=True):
-                st.write(results["refined_requirements"])
+        with st.expander("Refined Requirements", expanded=True):
+            st.write(results["refined_requirements"])
 
-            st.subheader("Final Requirements Document")
-            st.write(results["final_document"])
+        st.subheader("Final Requirements Document")
+        st.write(results["final_document"])
 
-            # Create downloadable PDF
-            pdf = create_pdf(results["final_document"])
-            st.markdown(
-                get_binary_file_downloader_html(pdf, 'requirements.pdf'),
-                unsafe_allow_html=True
-            )
+        # Create downloadable PDF
+        pdf = create_pdf(results["final_document"])
+        st.markdown(
+            get_binary_file_downloader_html(pdf, 'requirements.pdf'),
+            unsafe_allow_html=True
+        )
 
-            end_time = time.time()
-            end_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            duration = end_time - start_time
+        end_time = time.time()
+        end_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        duration = end_time - start_time
 
-            st.success(f"Process completed at: {end_datetime}")
-            st.info(f"Total duration: {duration:.2f} seconds")
+        st.success(f"Process completed at: {end_datetime}")
+        st.info(f"Total duration: {duration:.2f} seconds")
 
-            # Feedback mechanism
-            st.write("Was this helpful?")
-            col1, col2 = st.columns(2)
-            with col1:
-                if st.button("👍"):
-                    st.success("Thanks for your feedback!")
-            with col2:
-                if st.button("👎"):
-                    st.warning(
-                        "We're sorry to hear that. Please let us know how we can improve."
-                    )
-
-        except requests.exceptions.Timeout:
-            st.error(
-                "The request timed out. This can happen for complex projects. Please try again with a shorter project description or adjust the Response Length to a briefer option."
-            )
-        except Exception as e:
-            st.error(f"An unexpected error occurred: {str(e)}")
+            
 
 # Footer
 st.markdown("---")
