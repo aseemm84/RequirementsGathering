@@ -1,4 +1,3 @@
-from time import sleep
 import cohere
 import streamlit as st
 
@@ -18,12 +17,12 @@ Your task:
 
 Please provide a structured response with clear headings and bullet points."""
     try:
-        response = co.chat(
+        response = co.generate(
             model="command-r-plus",
-            message= prompt,
+            prompt=prompt,
             temperature=temperature
         )
-        return response.text
+        return response.generations[0].text
     except Exception as e:
         return f"Error: {str(e)}"
 
@@ -43,12 +42,12 @@ Your task:
 
 Please provide a structured response with clear headings for each stakeholder and a summary section."""
     try:
-        response = co.chat(
+        response = co.generate(
             model="command-r-plus",
-            message= prompt,
+            prompt=prompt,
             temperature=temperature
         )
-        return response.text
+        return response.generations[0].text
     except Exception as e:
         return f"Error: {str(e)}"
 
@@ -73,12 +72,12 @@ Your task:
 
 Please provide a structured response with clear headings for each category and a summary of key findings."""
     try:
-        response = co.chat(
+        response = co.generate(
             model="command-r-plus",
-            message= prompt,
+            prompt=prompt,
             temperature=temperature
         )
-        return response.text
+        return response.generations[0].text
     except Exception as e:
         return f"Error: {str(e)}"
 
@@ -100,12 +99,12 @@ Your task:
 
 Please format the document with clear headings, subheadings, and use bullet points or numbered lists where appropriate."""
     try:
-        response = co.chat(
+        response = co.generate(
             model="command-r-plus",
-            message= prompt,
+            prompt=prompt,
             temperature=temperature
         )
-        return response.text
+        return response.generations[0].text
     except Exception as e:
         return f"Error: {str(e)}"
 
@@ -114,38 +113,11 @@ def process_requirements(project_description, temperature, status_callback):
         status_callback("Project Manager Agent: Generating instructions...")
         pm_instructions = project_manager_agent(project_description, temperature)
         
-        # Ask for user confirmation or changes
-        status_callback("Project Manager Instructions:")
-        st.write(pm_instructions)
-        if st.button("Yes, proceed with these instructions"):
-            pass  # Continue with the existing instructions
-        else:
-            modified_instructions = st.text_area("Please provide your modified instructions:", value=pm_instructions)
-            pm_instructions = modified_instructions 
-
         status_callback("Stakeholder Interview Agent: Gathering initial requirements...")
         initial_requirements = stakeholder_interview_agent(pm_instructions, temperature)
 
-        # Ask for user confirmation or changes
-        status_callback("Initial Requirements:")
-        st.write(initial_requirements)
-        if st.button("Yes, proceed with these requirements"):
-            pass  # Continue with the existing requirements
-        else:
-            modified_requirements = st.text_area("Please provide your modified requirements:", value=initial_requirements)
-            initial_requirements = modified_requirements
-
         status_callback("Requirements Analyzer Agent: Refining and categorizing requirements...")
         refined_requirements = requirements_analyzer_agent(initial_requirements, temperature)
-
-        # Ask for user confirmation or changes
-        status_callback("Refined Requirements:")
-        st.write(refined_requirements)
-        if st.button("Yes, proceed with these requirements"):
-            pass  # Continue with the existing requirements
-        else:
-            modified_requirements = st.text_area("Please provide your modified requirements:", value=refined_requirements)
-            refined_requirements = modified_requirements
 
         status_callback("Documentation Agent: Compiling final document...")
         final_document = documentation_agent(refined_requirements, temperature)
