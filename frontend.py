@@ -110,58 +110,92 @@ if st.button("Gather Requirements"):
     if not project_description:
         st.warning("Please enter a project description.")
     else:
-
         start_time = time.time()
         start_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         st.info(f"Process started at: {start_datetime}")
 
-        # Create a placeholder for the status messages
+        # --- Project Manager Agent ---
         status_placeholder = st.empty()
-
-        # Define a callback function to update the status
-        def update_status(message):
-            status_placeholder.info(message)
-
-        # Process requirements with status updates
-        results = backend.process_requirements(
-            project_description,
-            temp_value,
-            update_status
-        )
-
-        # Clear the status placeholder
+        status_placeholder.info("Project Manager Agent: Generating instructions...")
+        pm_instructions = backend.project_manager_agent(project_description, temp_value)
         status_placeholder.empty()
 
-        # Check if results were generated successfully
-        if results:
-            # Display results in expandable sections
-            with st.expander("Project Manager Instructions", expanded=True):
-                st.write(results["pm_instructions"])
+        st.subheader("Project Manager Instructions:")
+        st.write(pm_instructions)
 
-            with st.expander("Initial Requirements", expanded=True):
-                st.write(results["initial_requirements"])
+        # User feedback loop for Project Manager Agent
+        while True:
+            user_satisfied = st.radio("Are you satisfied with the Project Manager Instructions?", ["Yes", "No"])
+            if user_satisfied == "Yes":
+                break
+            else:
+                refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Project Manager Agent:")
+                pm_instructions = backend.project_manager_agent(project_description, temp_value, refinement_instructions=refinement_instructions)
+                st.subheader("Updated Project Manager Instructions:")
+                st.write(pm_instructions)
 
-            with st.expander("Refined Requirements", expanded=True):
-                st.write(results["refined_requirements"])
+        # --- Stakeholder Interview Agent ---
+        status_placeholder = st.empty()
+        status_placeholder.info("Stakeholder Interview Agent: Gathering initial requirements...")
+        initial_requirements = backend.stakeholder_interview_agent(pm_instructions, temp_value)
+        status_placeholder.empty()
 
-            st.subheader("Final Requirements Document")
-            st.write(results["final_document"])
+        st.subheader("Initial Requirements:")
+        st.write(initial_requirements)
 
-            # Create downloadable PDF
-            pdf = create_pdf(results["final_document"])
-            st.markdown(
-                get_binary_file_downloader_html(pdf, 'requirements.pdf'),
-                unsafe_allow_html=True
-            )
+        # User feedback loop for Stakeholder Interview Agent
+        while True:
+            user_satisfied = st.radio("Are you satisfied with the Initial Requirements?", ["Yes", "No"])
+            if user_satisfied == "Yes":
+                break
+            else:
+                refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Stakeholder Interview Agent:")
+                initial_requirements = backend.stakeholder_interview_agent(pm_instructions, temp_value, refinement_instructions=refinement_instructions)
+                st.subheader("Updated Initial Requirements:")
+                st.write(initial_requirements)
 
-            end_time = time.time()
-            end_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            duration = end_time - start_time
+        # --- Requirements Analyzer Agent ---
+        status_placeholder = st.empty()
+        status_placeholder.info("Requirements Analyzer Agent: Refining and categorizing requirements...")
+        refined_requirements = backend.requirements_analyzer_agent(initial_requirements, temp_value)
+        status_placeholder.empty()
 
-            st.success(f"Process completed at: {end_datetime}")
-            st.info(f"Total duration: {duration:.2f} seconds")
-        else:
-            st.error("Failed to generate requirements. Please check the error messages above.")
+        st.subheader("Refined Requirements:")
+        st.write(refined_requirements)
+
+        # User feedback loop for Requirements Analyzer Agent
+        while True:
+            user_satisfied = st.radio("Are you satisfied with the Refined Requirements?", ["Yes", "No"])
+            if user_satisfied == "Yes":
+                break
+            else:
+                refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Requirements Analyzer Agent:")
+                refined_requirements = backend.requirements_analyzer_agent(initial_requirements, temp_value, refinement_instructions=refinement_instructions)
+                st.subheader("Updated Refined Requirements:")
+                st.write(refined_requirements)
+
+        # --- Documentation Agent ---
+        status_placeholder = st.empty()
+        status_placeholder.info("Documentation Agent: Compiling final document...")
+        final_document = backend.documentation_agent(refined_requirements, temp_value)
+        status_placeholder.empty()
+
+        st.subheader("Final Requirements Document")
+        st.write(final_document)
+
+        # Create downloadable PDF
+        pdf = create_pdf(final_document)
+        st.markdown(
+            get_binary_file_downloader_html(pdf, 'requirements.pdf'),
+            unsafe_allow_html=True
+        )
+
+        end_time = time.time()
+        end_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        duration = end_time - start_time
+
+        st.success(f"Process completed at: {end_datetime}")
+        st.info(f"Total duration: {duration:.2f} seconds")
 
 # Footer
 st.markdown("---")
