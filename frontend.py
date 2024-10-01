@@ -59,20 +59,6 @@ with st.sidebar:
         "Adjust this to control how focused or creative the responses should be."
     )
 
-    # # Response Length (Max Tokens) slider with 12 steps - commented out
-    # token_options = {
-    #     5000: "Brief",
-    #     6500: "Moderate",
-    #     8000: "Detailed",
-    #     9500: "Extensive"
-    # }
-    # token_value = st.select_slider(
-    #     "Response Length",
-    #     options=list(token_options.keys()),
-    #     format_func=lambda x: token_options[x],
-    #     value=8000
-    # )
-    # st.caption("Adjust this to control how brief or detailed the responses should be.")
 
     st.markdown("---")
     st.header("About Vision Forge")
