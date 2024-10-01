@@ -1,3 +1,4 @@
+# backend.py
 from time import sleep
 
 import cohere
@@ -5,13 +6,14 @@ import streamlit as st
 
 co = cohere.Client(st.secrets["COHERE_API_KEY"])
 
-def project_manager_agent(project_description, temperature):
+def project_manager_agent(project_description, temperature, **kwargs):
     """
     Acts as a project manager to provide instructions for gathering initial requirements.
 
     Args:
         project_description: A description of the project.
         temperature: Controls the creativity of the AI response.
+        **kwargs: Additional keyword arguments for refining the prompt.
 
     Returns:
         Instructions for gathering initial requirements.
@@ -29,6 +31,11 @@ def project_manager_agent(project_description, temperature):
         5. Suggest any potential challenges or considerations
 
         Please provide a structured response with clear headings and bullet points."""
+        
+        # Add any refinements to the prompt based on kwargs
+        if kwargs:
+            prompt += f"\n\nRefinement Instructions: {kwargs.get('refinement_instructions')}"
+
         response = co.chat(
             model="command-r-plus",
             message=prompt,
@@ -40,13 +47,14 @@ def project_manager_agent(project_description, temperature):
         return "Error occurred during project manager agent processing."
 
 
-def stakeholder_interview_agent(instructions, temperature):
+def stakeholder_interview_agent(instructions, temperature, **kwargs):
     """
     Simulates stakeholder interviews to gather initial requirements.
 
     Args:
         instructions: Instructions from the project manager agent.
         temperature: Controls the creativity of the AI response.
+        **kwargs: Additional keyword arguments for refining the prompt.
 
     Returns:
         Initial requirements gathered from simulated stakeholder interviews.
@@ -66,6 +74,11 @@ def stakeholder_interview_agent(instructions, temperature):
         4. Highlight any conflicting requirements between stakeholders
 
         Please provide a structured response with clear headings for each stakeholder and a summary section."""
+        
+        # Add any refinements to the prompt based on kwargs
+        if kwargs:
+            prompt += f"\n\nRefinement Instructions: {kwargs.get('refinement_instructions')}"
+
         response = co.chat(
             model="command-r-plus",
             message=prompt,
@@ -77,13 +90,14 @@ def stakeholder_interview_agent(instructions, temperature):
         return "Error occurred during stakeholder interview agent processing."
 
 
-def requirements_analyzer_agent(initial_requirements, temperature):
+def requirements_analyzer_agent(initial_requirements, temperature, **kwargs):
     """
     Refines and categorizes initial requirements.
 
     Args:
         initial_requirements: Initial requirements gathered from stakeholder interviews.
         temperature: Controls the creativity of the AI response.
+        **kwargs: Additional keyword arguments for refining the prompt.
 
     Returns:
         Refined and categorized requirements.
@@ -108,6 +122,11 @@ def requirements_analyzer_agent(initial_requirements, temperature):
         4. Suggest 3-5 additional requirements that might have been overlooked
 
         Please provide a structured response with clear headings for each category and a summary of key findings."""
+        
+        # Add any refinements to the prompt based on kwargs
+        if kwargs:
+            prompt += f"\n\nRefinement Instructions: {kwargs.get('refinement_instructions')}"
+
         response = co.chat(
             model="command-r-plus",
             message=prompt,
@@ -119,13 +138,14 @@ def requirements_analyzer_agent(initial_requirements, temperature):
         return "Error occurred during requirements analyzer agent processing."
 
 
-def documentation_agent(refined_requirements, temperature):
+def documentation_agent(refined_requirements, temperature, **kwargs):
     """
     Compiles a final requirements document.
 
     Args:
         refined_requirements: Refined and categorized requirements.
         temperature: Controls the creativity of the AI response.
+        **kwargs: Additional keyword arguments for refining the prompt.
 
     Returns:
         A formatted requirements document.
@@ -147,6 +167,11 @@ def documentation_agent(refined_requirements, temperature):
         6. Include a section on future considerations or potential enhancements
 
         Please format the document with clear headings, subheadings, and use bullet points or numbered lists where appropriate."""
+        
+        # Add any refinements to the prompt based on kwargs
+        if kwargs:
+            prompt += f"\n\nRefinement Instructions: {kwargs.get('refinement_instructions')}"
+
         response = co.chat(
             model="command-r-plus",
             message=prompt,
@@ -156,39 +181,3 @@ def documentation_agent(refined_requirements, temperature):
     except cohere.CohereError as e:
         st.error(f"Documentation Agent Error: {e}")
         return "Error occurred during documentation agent processing."
-
-
-def process_requirements(project_description, temperature, status_callback):
-    """
-    Orchestrates the entire requirements gathering process.
-
-    Args:
-        project_description: A description of the project.
-        temperature: Controls the creativity of the AI responses.
-        status_callback: A function to update the status of the process.
-
-    Returns:
-        A dictionary containing the results from each agent.
-    """
-    try:
-        status_callback("Project Manager Agent: Generating instructions...")
-        pm_instructions = project_manager_agent(project_description, temperature)
-
-        status_callback("Stakeholder Interview Agent: Gathering initial requirements...")
-        initial_requirements = stakeholder_interview_agent(pm_instructions, temperature)
-
-        status_callback("Requirements Analyzer Agent: Refining and categorizing requirements...")
-        refined_requirements = requirements_analyzer_agent(initial_requirements, temperature)
-
-        status_callback("Documentation Agent: Compiling final document...")
-        final_document = documentation_agent(refined_requirements, temperature)
-
-        return {
-            "pm_instructions": pm_instructions,
-            "initial_requirements": initial_requirements,
-            "refined_requirements": refined_requirements,
-            "final_document": final_document
-        }
-    except Exception as e:
-        st.error(f"An unexpected error occurred: {e}")
-        return None
