@@ -121,20 +121,21 @@ if st.button("Gather Requirements"):
         status_placeholder.empty()
 
         st.subheader("Project Manager Instructions:")
-        st.write(pm_instructions)
+        pm_output = st.empty()  # Placeholder for the output
+        pm_output.write(pm_instructions)
 
         # User feedback loop for Project Manager Agent
-        pm_count = 0  # Counter for unique keys
-        while True:
-            col1, col2 = st.columns(2)
-            if col1.button("Yes", key=f"pm_yes_{pm_count}"):
-                break
-            if col2.button("No", key=f"pm_no_{pm_count}"):
+        col1, col2 = st.columns(2)  # Create columns for buttons
+        pm_yes_button = col1.button("Yes", key="pm_yes")
+        pm_no_button = col2.button("No", key="pm_no")
+        
+        while not pm_yes_button:  # Loop until "Yes" is clicked
+            if pm_no_button:
                 refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Project Manager Agent:")
                 pm_instructions = backend.project_manager_agent(project_description, temp_value, refinement_instructions=refinement_instructions)
-                st.subheader("Updated Project Manager Instructions:")
-                st.write(pm_instructions)
-            pm_count += 1
+                pm_output.write(pm_instructions)  # Update the output
+                pm_yes_button = col1.button("Yes", key="pm_yes")  # Update button states
+                pm_no_button = col2.button("No", key="pm_no")
 
         # --- Stakeholder Interview Agent ---
         status_placeholder = st.empty()
@@ -143,20 +144,21 @@ if st.button("Gather Requirements"):
         status_placeholder.empty()
 
         st.subheader("Initial Requirements:")
-        st.write(initial_requirements)
+        si_output = st.empty()
+        si_output.write(initial_requirements)
 
         # User feedback loop for Stakeholder Interview Agent
-        si_count = 0  # Counter for unique keys
-        while True:
-            col1, col2 = st.columns(2)
-            if col1.button("Yes", key=f"si_yes_{si_count}"):
-                break
-            if col2.button("No", key=f"si_no_{si_count}"):
+        col1, col2 = st.columns(2)
+        si_yes_button = col1.button("Yes", key="si_yes")
+        si_no_button = col2.button("No", key="si_no")
+
+        while not si_yes_button:
+            if si_no_button:
                 refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Stakeholder Interview Agent:")
                 initial_requirements = backend.stakeholder_interview_agent(pm_instructions, temp_value, refinement_instructions=refinement_instructions)
-                st.subheader("Updated Initial Requirements:")
-                st.write(initial_requirements)
-            si_count += 1
+                si_output.write(initial_requirements)
+                si_yes_button = col1.button("Yes", key="si_yes")
+                si_no_button = col2.button("No", key="si_no")
 
         # --- Requirements Analyzer Agent ---
         status_placeholder = st.empty()
@@ -165,20 +167,21 @@ if st.button("Gather Requirements"):
         status_placeholder.empty()
 
         st.subheader("Refined Requirements:")
-        st.write(refined_requirements)
+        ra_output = st.empty()
+        ra_output.write(refined_requirements)
 
         # User feedback loop for Requirements Analyzer Agent
-        ra_count = 0  # Counter for unique keys
-        while True:
-            col1, col2 = st.columns(2)
-            if col1.button("Yes", key=f"ra_yes_{ra_count}"):
-                break
-            if col2.button("No", key=f"ra_no_{ra_count}"):
+        col1, col2 = st.columns(2)
+        ra_yes_button = col1.button("Yes", key="ra_yes")
+        ra_no_button = col2.button("No", key="ra_no")
+
+        while not ra_yes_button:
+            if ra_no_button:
                 refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Requirements Analyzer Agent:")
                 refined_requirements = backend.requirements_analyzer_agent(initial_requirements, temp_value, refinement_instructions=refinement_instructions)
-                st.subheader("Updated Refined Requirements:")
-                st.write(refined_requirements)
-            ra_count += 1
+                ra_output.write(refined_requirements)
+                ra_yes_button = col1.button("Yes", key="ra_yes")
+                ra_no_button = col2.button("No", key="ra_no")
 
         # --- Documentation Agent ---
         status_placeholder = st.empty()
@@ -187,7 +190,21 @@ if st.button("Gather Requirements"):
         status_placeholder.empty()
 
         st.subheader("Final Requirements Document")
-        st.write(final_document)
+        doc_output = st.empty()
+        doc_output.write(final_document)
+
+        # User feedback loop for Documentation Agent
+        col1, col2 = st.columns(2)
+        doc_yes_button = col1.button("Yes", key="doc_yes")
+        doc_no_button = col2.button("No", key="doc_no")
+
+        while not doc_yes_button:
+            if doc_no_button:
+                refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Documentation Agent:")
+                final_document = backend.documentation_agent(refined_requirements, temp_value, refinement_instructions=refinement_instructions)
+                doc_output.write(final_document)
+                doc_yes_button = col1.button("Yes", key="doc_yes")
+                doc_no_button = col2.button("No", key="doc_no")
 
         # Create downloadable PDF
         pdf = create_pdf(final_document)
