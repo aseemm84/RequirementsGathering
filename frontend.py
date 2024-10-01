@@ -200,4 +200,9 @@ if st.button("Gather Requirements"):
         end_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         duration = end_time - start_time
 
-        st.success(f"Process completed at: {end
+        st.success(f"Process completed at: {end_datetime}")
+        st.info(f"Total duration: {duration:.2f} seconds")
+
+# Footer
+st.markdown("---")
+st.markdown("Powered by Cohere and Streamlit")
