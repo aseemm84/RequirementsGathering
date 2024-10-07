@@ -81,7 +81,7 @@ def stakeholder_interview_agent(instructions, temperature):
 
         Please provide a structured response with clear headings for each stakeholder and a summary section."""
     llm = get_llm(temperature)    
-    prompt = ChatPromptTemplate.from_template(template, llm)
+    prompt = ChatPromptTemplate.from_template(template)
     chain = prompt | llm
     
     try:
@@ -91,7 +91,7 @@ def stakeholder_interview_agent(instructions, temperature):
         return f"Error: {str(e)}"
 
 
-def requirements_analyzer_agent(initial_requirements):
+def requirements_analyzer_agent(initial_requirements, temperature):
     """
     Refines and categorizes initial requirements.
 
@@ -133,7 +133,7 @@ def requirements_analyzer_agent(initial_requirements):
 
 
 
-def documentation_agent(refined_requirements):
+def documentation_agent(refined_requirements, temperature):
     """
     Compiles a final requirements document.
 
