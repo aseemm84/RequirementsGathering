@@ -11,7 +11,7 @@ def get_llm(temperature):
     Returns an instance of the ChatGroq LLM with the specified temperature.
     """
     return ChatGroq(
-        model="llava-v1.5-7b-4096-preview",
+        model="llama3-70b-8192",
         groq_api_key=groq,
         temperature=temperature
         # other params...
