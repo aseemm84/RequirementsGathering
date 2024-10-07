@@ -182,6 +182,8 @@ def process_requirements(project_description, temperature, status_callback):
     Returns:
         A dictionary containing the results from each agent.
     """
+      
+    try:
         status_callback("Project Manager Agent: Generating instructions...")
         pm_instructions = project_manager_agent(project_description, temperature)
 
