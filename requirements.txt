@@ -1,5 +1,9 @@
 streamlit
-cohere
 fpdf
 requests
 Pillow
+cohere
+Pillow
+langchain-groq
+langchain-core
+langchain
