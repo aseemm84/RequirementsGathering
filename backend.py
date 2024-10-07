@@ -148,38 +148,12 @@ def documentation_agent(refined_requirements, temperature):
         1. Create a concise and informative executive summary (2-3 paragraphs) highlighting the project's purpose and key features.
         2. Provide a comprehensive table of contents in a proper readable fromat. Ensure each item in the table of contents start in a new line.
         3. Structure the FRD with clear sections and headings, following industry best practices.
-        4. The structure of the FRD should be as follows:
-            a. Introduction:
-                - Purpose
-                - Scope
-                - Target Audience
-                - Document Conventions
-            b. Overall Description
-                - Product Perspective
-                - Product Functions
-                - User Classes and Characteristics
-                - Operating Environment
-                - Design and Implementation Constraints
-                - Assumptions and Dependencies
-            c. Specific Requirements
-                - Functional Requirements
-                - Non-Functional Requirements
-                - Technical Requirements
-            d. Data Requirements (if required otherwise omit this section)
-                - Data Collection
-                - Data Integration
-            e. Security Requirements
-                - User data security
-                - Ethical considerations
-            f. External Interface Requirements (if required for the project otherwise omit this section)
-            g. Future considerations or potential enhancements for future phases or versions
-            h. Appendices (as needed)
-            i. Glossary
-        4. For each section:
+        4. Ensure the structure of the Functional Requirements Document should be a real world structure often prepared by the business analysts in big and professional organisations.
+        5. For each section in the document:
             a. Provide a brief introduction to the section.
             b. Provide proper numbering, font size and other formatting requirements as per the industry best practices.
-        5. Define all technical terms in a glossary.
-        6. Clearly state any assumptions and constraints that may impact development or implementation.
+        6. Define all technical terms in a glossary.
+        7. Clearly state any assumptions and constraints that may impact development or implementation.
 
         Please format the document professionally with clear headings, subheadings, and use bullet points or numbered lists where appropriate. Ensure the language is precise, unambiguous, and easy to understand for both technical and non-technical stakeholders."""
     llm = get_llm(temperature)    
