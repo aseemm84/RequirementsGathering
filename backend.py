@@ -1,9 +1,14 @@
-from time import sleep
-
-import cohere
 import streamlit as st
+from langchain_groq import ChatGroq
+from langchain_core.prompts import ChatPromptTemplate
+from langchain.chains import LLMChain
 
-co = cohere.Client(st.secrets["COHERE_API_KEY"])
+
+groq = st.secrets["Groq_API_Key"]
+
+
+
+
 
 def project_manager_agent(project_description, temperature):
     """
@@ -16,8 +21,8 @@ def project_manager_agent(project_description, temperature):
     Returns:
         Instructions for gathering initial requirements.
     """
-    try:
-        prompt = f"""As a project manager, provide detailed instructions for gathering initial requirements for this project:
+   
+    template = """As a project manager, provide detailed instructions for gathering initial requirements for this project:
 
         Project Description: {project_description}
 
@@ -29,15 +34,20 @@ def project_manager_agent(project_description, temperature):
         5. Suggest any potential challenges or considerations
 
         Please provide a structured response with clear headings and bullet points."""
-        response = co.chat(
-            model="command-r-plus",
-            message=prompt,
-            temperature=temperature
-        )
-        return response.text
-    except cohere.CohereError as e:
-        st.error(f"Project Manager Agent Error: {e}")
-        return "Error occurred during project manager agent processing."
+    prompt = ChatPromptTemplate.from_template(template)
+    chain = prompt | llm
+    
+    llm = ChatGroq(
+    model="llama-3.1-70b-versatile",
+    groq_api_key=groq,
+    temperature=temperature
+    # other params...
+    )
+    try:
+        response = chain.invoke({"project_description": project_description})
+        return response.content
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 
 def stakeholder_interview_agent(instructions, temperature):
@@ -51,8 +61,8 @@ def stakeholder_interview_agent(instructions, temperature):
     Returns:
         Initial requirements gathered from simulated stakeholder interviews.
     """
-    try:
-        prompt = f"""As a stakeholder interviewer, conduct simulated interviews based on these instructions and provide initial requirements:
+    
+    template = """As a stakeholder interviewer, conduct simulated interviews based on these instructions and provide initial requirements:
 
         Instructions: {instructions}
 
@@ -66,15 +76,22 @@ def stakeholder_interview_agent(instructions, temperature):
         4. Highlight any conflicting requirements between stakeholders
 
         Please provide a structured response with clear headings for each stakeholder and a summary section."""
-        response = co.chat(
-            model="command-r-plus",
-            message=prompt,
-            temperature=temperature
-        )
-        return response.text
-    except cohere.CohereError as e:
-        st.error(f"Stakeholder Interview Agent Error: {e}")
-        return "Error occurred during stakeholder interview agent processing."
+        
+    prompt = ChatPromptTemplate.from_template(template)
+    chain = prompt | llm
+    
+    llm = ChatGroq(
+    model="llama-3.1-70b-versatile",
+    groq_api_key=groq,
+    temperature=temperature
+    # other params...
+    )
+    
+    try:
+        response = chain.invoke({"instructions": instructions})
+        return response.content
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 
 def requirements_analyzer_agent(initial_requirements, temperature):
@@ -88,8 +105,7 @@ def requirements_analyzer_agent(initial_requirements, temperature):
     Returns:
         Refined and categorized requirements.
     """
-    try:
-        prompt = f"""As a requirements analyzer, refine and categorize these initial requirements:
+    template = """As a requirements analyzer, refine and categorize these initial requirements:
 
         Initial Requirements: {initial_requirements}
 
@@ -108,15 +124,23 @@ def requirements_analyzer_agent(initial_requirements, temperature):
         4. Suggest 3-5 additional requirements that might have been overlooked
 
         Please provide a structured response with clear headings for each category and a summary of key findings."""
-        response = co.chat(
-            model="command-r-plus",
-            message=prompt,
-            temperature=temperature
-        )
-        return response.text
-    except cohere.CohereError as e:
-        st.error(f"Requirements Analyzer Agent Error: {e}")
-        return "Error occurred during requirements analyzer agent processing."
+        
+    prompt = ChatPromptTemplate.from_template(template)
+    chain = prompt | llm
+    
+    llm = ChatGroq(
+    model="llama-3.1-70b-versatile",
+    groq_api_key=groq,
+    temperature=temperature
+    # other params...
+    )
+    
+    try:
+        response = chain.invoke({"initial_requirements": initial_requirements})
+        return response.content
+    except Exception as e:
+        return f"Error: {str(e)}"
+
 
 
 def documentation_agent(refined_requirements, temperature):
@@ -130,8 +154,7 @@ def documentation_agent(refined_requirements, temperature):
     Returns:
         A formatted requirements document.
     """
-    try:
-        prompt = f"""As a documentation specialist, compile a final requirements document based on these refined requirements:
+    template = """As a documentation specialist, compile a final requirements document based on these refined requirements:
 
         Refined Requirements: {refined_requirements}
 
@@ -147,16 +170,22 @@ def documentation_agent(refined_requirements, temperature):
         6. Include a section on future considerations or potential enhancements
 
         Please format the document with clear headings, subheadings, and use bullet points or numbered lists where appropriate."""
-        response = co.chat(
-            model="command-r-plus",
-            message=prompt,
-            temperature=temperature
-        )
-        return response.text
-    except cohere.CohereError as e:
-        st.error(f"Documentation Agent Error: {e}")
-        return "Error occurred during documentation agent processing."
-
+        
+    prompt = ChatPromptTemplate.from_template(template)
+    chain = prompt | llm
+    
+    llm = ChatGroq(
+    model="llama-3.1-70b-versatile",
+    groq_api_key=groq,
+    temperature=temperature
+    # other params...
+    )
+    
+    try:
+        response = chain.invoke({"refined_requirements": refined_requirements})
+        return response.content
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 def process_requirements(project_description, temperature, status_callback):
     """
