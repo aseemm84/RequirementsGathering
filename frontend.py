@@ -110,115 +110,58 @@ if st.button("Gather Requirements"):
     if not project_description:
         st.warning("Please enter a project description.")
     else:
+
         start_time = time.time()
         start_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         st.info(f"Process started at: {start_datetime}")
 
-        # --- Project Manager Agent ---
+        # Create a placeholder for the status messages
         status_placeholder = st.empty()
-        status_placeholder.info("Project Manager Agent: Generating instructions...")
-        pm_instructions = backend.project_manager_agent(project_description, temp_value)
-        status_placeholder.empty()
 
-        st.subheader("Project Manager Instructions:")
-        pm_output = st.empty()  # Placeholder for the output
-        pm_output.write(pm_instructions)
+        # Define a callback function to update the status
+        def update_status(message):
+            status_placeholder.info(message)
 
-        # User feedback loop for Project Manager Agent
-        col1, col2 = st.columns(2)  # Create columns for buttons
-        pm_yes_button = col1.button("Yes", key="pm_yes")
-        pm_no_button = col2.button("No", key="pm_no")
-        
-        while not pm_yes_button:  # Loop until "Yes" is clicked
-            if pm_no_button:
-                refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Project Manager Agent:")
-                pm_instructions = backend.project_manager_agent(project_description, temp_value, refinement_instructions=refinement_instructions)
-                pm_output.write(pm_instructions)  # Update the output
-                pm_yes_button = col1.button("Yes", key="pm_yes")  # Update button states
-                pm_no_button = col2.button("No", key="pm_no")
-
-        # --- Stakeholder Interview Agent ---
-        status_placeholder = st.empty()
-        status_placeholder.info("Stakeholder Interview Agent: Gathering initial requirements...")
-        initial_requirements = backend.stakeholder_interview_agent(pm_instructions, temp_value)
-        status_placeholder.empty()
-
-        st.subheader("Initial Requirements:")
-        si_output = st.empty()
-        si_output.write(initial_requirements)
-
-        # User feedback loop for Stakeholder Interview Agent
-        col1, col2 = st.columns(2)
-        si_yes_button = col1.button("Yes", key="si_yes")
-        si_no_button = col2.button("No", key="si_no")
-
-        while not si_yes_button:
-            if si_no_button:
-                refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Stakeholder Interview Agent:")
-                initial_requirements = backend.stakeholder_interview_agent(pm_instructions, temp_value, refinement_instructions=refinement_instructions)
-                si_output.write(initial_requirements)
-                si_yes_button = col1.button("Yes", key="si_yes")
-                si_no_button = col2.button("No", key="si_no")
-
-        # --- Requirements Analyzer Agent ---
-        status_placeholder = st.empty()
-        status_placeholder.info("Requirements Analyzer Agent: Refining and categorizing requirements...")
-        refined_requirements = backend.requirements_analyzer_agent(initial_requirements, temp_value)
-        status_placeholder.empty()
-
-        st.subheader("Refined Requirements:")
-        ra_output = st.empty()
-        ra_output.write(refined_requirements)
-
-        # User feedback loop for Requirements Analyzer Agent
-        col1, col2 = st.columns(2)
-        ra_yes_button = col1.button("Yes", key="ra_yes")
-        ra_no_button = col2.button("No", key="ra_no")
-
-        while not ra_yes_button:
-            if ra_no_button:
-                refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Requirements Analyzer Agent:")
-                refined_requirements = backend.requirements_analyzer_agent(initial_requirements, temp_value, refinement_instructions=refinement_instructions)
-                ra_output.write(refined_requirements)
-                ra_yes_button = col1.button("Yes", key="ra_yes")
-                ra_no_button = col2.button("No", key="ra_no")
-
-        # --- Documentation Agent ---
-        status_placeholder = st.empty()
-        status_placeholder.info("Documentation Agent: Compiling final document...")
-        final_document = backend.documentation_agent(refined_requirements, temp_value)
-        status_placeholder.empty()
-
-        st.subheader("Final Requirements Document")
-        doc_output = st.empty()
-        doc_output.write(final_document)
-
-        # User feedback loop for Documentation Agent
-        col1, col2 = st.columns(2)
-        doc_yes_button = col1.button("Yes", key="doc_yes")
-        doc_no_button = col2.button("No", key="doc_no")
-
-        while not doc_yes_button:
-            if doc_no_button:
-                refinement_instructions = st.text_area("Please provide your concerns or any specific instructions for the Documentation Agent:")
-                final_document = backend.documentation_agent(refined_requirements, temp_value, refinement_instructions=refinement_instructions)
-                doc_output.write(final_document)
-                doc_yes_button = col1.button("Yes", key="doc_yes")
-                doc_no_button = col2.button("No", key="doc_no")
-
-        # Create downloadable PDF
-        pdf = create_pdf(final_document)
-        st.markdown(
-            get_binary_file_downloader_html(pdf, 'requirements.pdf'),
-            unsafe_allow_html=True
+        # Process requirements with status updates
+        results = backend.process_requirements(
+            project_description,
+            temp_value,
+            update_status
         )
 
-        end_time = time.time()
-        end_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        duration = end_time - start_time
+        # Clear the status placeholder
+        status_placeholder.empty()
 
-        st.success(f"Process completed at: {end_datetime}")
-        st.info(f"Total duration: {duration:.2f} seconds")
+        # Check if results were generated successfully
+        if results:
+            # Display results in expandable sections
+            with st.expander("Project Manager Instructions", expanded=True):
+                st.write(results["pm_instructions"])
+
+            with st.expander("Initial Requirements", expanded=True):
+                st.write(results["initial_requirements"])
+
+            with st.expander("Refined Requirements", expanded=True):
+                st.write(results["refined_requirements"])
+
+            st.subheader("Final Requirements Document")
+            st.write(results["final_document"])
+
+            # Create downloadable PDF
+            pdf = create_pdf(results["final_document"])
+            st.markdown(
+                get_binary_file_downloader_html(pdf, 'requirements.pdf'),
+                unsafe_allow_html=True
+            )
+
+            end_time = time.time()
+            end_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            duration = end_time - start_time
+
+            st.success(f"Process completed at: {end_datetime}")
+            st.info(f"Total duration: {duration:.2f} seconds")
+        else:
+            st.error("Failed to generate requirements. Please check the error messages above.")
 
 # Footer
 st.markdown("---")
