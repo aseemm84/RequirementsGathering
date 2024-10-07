@@ -146,7 +146,7 @@ def documentation_agent(refined_requirements, temperature):
 
         Your task:
         1. Create a concise and informative executive summary (2-3 paragraphs) highlighting the project's purpose and key features.
-        2. Provide a comprehensive table of contents with page numbers in a proper readable fromat. Ensure each item in the table of contents start in a new line.
+        2. Provide a comprehensive table of contents in a proper readable fromat. Ensure each item in the table of contents start in a new line.
         3. Structure the FRD with clear sections and headings, following industry best practices.
         4. The structure of the FRD should be as follows:
             a. Introduction:
@@ -172,10 +172,9 @@ def documentation_agent(refined_requirements, temperature):
             f. Future considerations or potential enhancements for future phases or versions
             g. Appendices (as needed)
             h. Glossary
-        4. For each category of requirements:
+        4. For each section:
             a. Provide a brief introduction to the section.
             b. Provide proper numbering, font size and other formatting requirements as per the industry best practices.
-            c. List all requirements in a numbered format, using consistent terminology.
         5. Define all technical terms in a glossary.
         6. Clearly state any assumptions and constraints that may impact development or implementation.
 
