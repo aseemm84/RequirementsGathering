@@ -7,12 +7,7 @@ from langchain.chains import LLMChain
 groq = st.secrets["Groq_API_Key"]
 
 
-llm = ChatGroq(
-    model="llama-3.1-70b-versatile",
-    groq_api_key=groq,
-    temperature=temperature
-    # other params...
-    )
+
 
 
 def project_manager_agent(project_description, temperature):
@@ -178,6 +173,12 @@ def process_requirements(project_description, temperature, status_callback):
         A dictionary containing the results from each agent.
     """
     try:
+        llm = ChatGroq(
+            model="llama-3.1-70b-versatile",
+            groq_api_key=groq,
+            temperature=temperature
+            # other params...
+            )
         status_callback("Project Manager Agent: Generating instructions...")
         pm_instructions = project_manager_agent(project_description, temperature)
 
