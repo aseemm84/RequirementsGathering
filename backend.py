@@ -147,7 +147,27 @@ def documentation_agent(refined_requirements, temperature):
         Your task:
         1. Create a concise and informative executive summary (2-3 paragraphs) highlighting the project's purpose and key features.
         2. Provide a comprehensive table of contents with page numbers.
-        3. Structure the FRD with clear sections and headings, following industry best practices (refer to online resources for FRD templates and examples).
+        3. Structure the FRD with clear sections and headings, following industry best practices.
+        4. The structure of the FRD should be as follows:
+            a. Introduction:
+                - Purpose
+                - Scope
+                - Target Audience
+                - Document Conventions
+            b. Overall Description
+                - Product Perspective
+                - Product Functions
+                - User Classes and Characteristics
+                - Operating Environment
+                - Design and Implementation Constraints
+                - Assumptions and Dependencies
+            c. Specific Requirements
+                - Functional Requirements
+                - Non-Functional Requirements
+                - Technical Requirements
+            d. Data Requirements
+            e. External Interface Requirements (if required)
+            f. Appendices (as needed)
         4. For each category of requirements:
             a. Provide a brief introduction to the section.
             b. List all requirements in a numbered format, using consistent terminology (e.g., "The system shall...").
