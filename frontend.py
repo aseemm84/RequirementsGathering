@@ -165,4 +165,4 @@ if st.button("Gather Requirements"):
 
 # Footer
 st.markdown("---")
-st.markdown("Powered by Cohere and Streamlit")
+st.markdown("Powered by Groq and Streamlit")
