@@ -144,7 +144,7 @@ def documentation_agent(refined_requirements, temperature):
     Returns:
         A formatted requirements document.
     """
-    template = """As a documentation specialist, compile a final requirements document based on these refined requirements:
+    template = """As a documentation specialist, compile a functional requirements document based on these refined requirements:
 
         Refined Requirements: {refined_requirements}
 
