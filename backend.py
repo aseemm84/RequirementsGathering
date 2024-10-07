@@ -168,10 +168,13 @@ def documentation_agent(refined_requirements, temperature):
             d. Data Requirements (if required otherwise omit this section)
                 - Data Collection
                 - Data Integration
-            e. External Interface Requirements (if required for the project otherwise omit this section)
-            f. Future considerations or potential enhancements for future phases or versions
-            g. Appendices (as needed)
-            h. Glossary
+            e. Security Requirements
+                - User data security
+                - Ethical considerations
+            f. External Interface Requirements (if required for the project otherwise omit this section)
+            g. Future considerations or potential enhancements for future phases or versions
+            h. Appendices (as needed)
+            i. Glossary
         4. For each section:
             a. Provide a brief introduction to the section.
             b. Provide proper numbering, font size and other formatting requirements as per the industry best practices.
