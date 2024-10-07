@@ -10,7 +10,7 @@ groq = st.secrets["Groq_API_Key"]
 
 
 
-def project_manager_agent(project_description, temperature):
+def project_manager_agent(project_description):
     """
     Acts as a project manager to provide instructions for gathering initial requirements.
 
@@ -44,7 +44,7 @@ def project_manager_agent(project_description, temperature):
         return f"Error: {str(e)}"
 
 
-def stakeholder_interview_agent(instructions, temperature):
+def stakeholder_interview_agent(instructions):
     """
     Simulates stakeholder interviews to gather initial requirements.
 
@@ -81,7 +81,7 @@ def stakeholder_interview_agent(instructions, temperature):
         return f"Error: {str(e)}"
 
 
-def requirements_analyzer_agent(initial_requirements, temperature):
+def requirements_analyzer_agent(initial_requirements):
     """
     Refines and categorizes initial requirements.
 
@@ -123,7 +123,7 @@ def requirements_analyzer_agent(initial_requirements, temperature):
 
 
 
-def documentation_agent(refined_requirements, temperature):
+def documentation_agent(refined_requirements):
     """
     Compiles a final requirements document.
 
