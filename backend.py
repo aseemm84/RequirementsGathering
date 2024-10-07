@@ -7,7 +7,12 @@ from langchain.chains import LLMChain
 groq = st.secrets["Groq_API_Key"]
 
 
-
+llm = ChatGroq(
+    model="llama-3.1-70b-versatile",
+    groq_api_key=groq,
+    temperature=temperature
+    # other params...
+    )
 
 
 def project_manager_agent(project_description, temperature):
@@ -37,12 +42,6 @@ def project_manager_agent(project_description, temperature):
     prompt = ChatPromptTemplate.from_template(template)
     chain = prompt | llm
     
-    llm = ChatGroq(
-    model="llama-3.1-70b-versatile",
-    groq_api_key=groq,
-    temperature=temperature
-    # other params...
-    )
     try:
         response = chain.invoke({"project_description": project_description})
         return response.content
@@ -79,13 +78,6 @@ def stakeholder_interview_agent(instructions, temperature):
         
     prompt = ChatPromptTemplate.from_template(template)
     chain = prompt | llm
-    
-    llm = ChatGroq(
-    model="llama-3.1-70b-versatile",
-    groq_api_key=groq,
-    temperature=temperature
-    # other params...
-    )
     
     try:
         response = chain.invoke({"instructions": instructions})
@@ -128,13 +120,6 @@ def requirements_analyzer_agent(initial_requirements, temperature):
     prompt = ChatPromptTemplate.from_template(template)
     chain = prompt | llm
     
-    llm = ChatGroq(
-    model="llama-3.1-70b-versatile",
-    groq_api_key=groq,
-    temperature=temperature
-    # other params...
-    )
-    
     try:
         response = chain.invoke({"initial_requirements": initial_requirements})
         return response.content
@@ -173,13 +158,6 @@ def documentation_agent(refined_requirements, temperature):
         
     prompt = ChatPromptTemplate.from_template(template)
     chain = prompt | llm
-    
-    llm = ChatGroq(
-    model="llama-3.1-70b-versatile",
-    groq_api_key=groq,
-    temperature=temperature
-    # other params...
-    )
     
     try:
         response = chain.invoke({"refined_requirements": refined_requirements})
