@@ -165,8 +165,10 @@ def documentation_agent(refined_requirements, temperature):
                 - Functional Requirements
                 - Non-Functional Requirements
                 - Technical Requirements
-            d. Data Requirements
-            e. External Interface Requirements (if required)
+            d. Data Requirements (if required otherwise omit this section)
+                - Data Collection
+                - Data Integration
+            e. External Interface Requirements (if required for the project otherwise omit this section)
             f. Future considerations or potential enhancements for future phases or versions
             g. Appendices (as needed)
             h. Glossary
