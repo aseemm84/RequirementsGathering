@@ -71,7 +71,7 @@ def stakeholder_interview_agent(instructions):
 
         Please provide a structured response with clear headings for each stakeholder and a summary section."""
         
-    prompt = ChatPromptTemplate.from_template(template)
+    prompt = ChatPromptTemplate.from_template(template, llm)
     chain = prompt | llm
     
     try:
@@ -180,16 +180,16 @@ def process_requirements(project_description, temperature, status_callback):
             # other params...
             )
         status_callback("Project Manager Agent: Generating instructions...")
-        pm_instructions = project_manager_agent(project_description, temperature)
+        pm_instructions = project_manager_agent(project_description)
 
         status_callback("Stakeholder Interview Agent: Gathering initial requirements...")
-        initial_requirements = stakeholder_interview_agent(pm_instructions, temperature)
+        initial_requirements = stakeholder_interview_agent(pm_instructions)
 
         status_callback("Requirements Analyzer Agent: Refining and categorizing requirements...")
-        refined_requirements = requirements_analyzer_agent(initial_requirements, temperature)
+        refined_requirements = requirements_analyzer_agent(initial_requirements)
 
         status_callback("Documentation Agent: Compiling final document...")
-        final_document = documentation_agent(refined_requirements, temperature)
+        final_document = documentation_agent(refined_requirements)
 
         return {
             "pm_instructions": pm_instructions,
