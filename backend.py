@@ -6,11 +6,20 @@ from langchain.chains import LLMChain
 
 groq = st.secrets["Groq_API_Key"]
 
+def get_llm(temperature): 
+    """
+    Returns an instance of the ChatGroq LLM with the specified temperature.
+    """
+    return ChatGroq(
+        model="llama-3.1-70b-versatile",
+        groq_api_key=groq,
+        temperature=temperature
+        # other params...
+    )
 
 
 
-
-def project_manager_agent(project_description):
+def project_manager_agent(project_description, temperature):
     """
     Acts as a project manager to provide instructions for gathering initial requirements.
 
@@ -34,6 +43,7 @@ def project_manager_agent(project_description):
         5. Suggest any potential challenges or considerations
 
         Please provide a structured response with clear headings and bullet points."""
+    llm = get_llm(temperature)
     prompt = ChatPromptTemplate.from_template(template)
     chain = prompt | llm
     
@@ -44,7 +54,7 @@ def project_manager_agent(project_description):
         return f"Error: {str(e)}"
 
 
-def stakeholder_interview_agent(instructions):
+def stakeholder_interview_agent(instructions, temperature):
     """
     Simulates stakeholder interviews to gather initial requirements.
 
@@ -70,7 +80,7 @@ def stakeholder_interview_agent(instructions):
         4. Highlight any conflicting requirements between stakeholders
 
         Please provide a structured response with clear headings for each stakeholder and a summary section."""
-        
+    llm = get_llm(temperature)    
     prompt = ChatPromptTemplate.from_template(template, llm)
     chain = prompt | llm
     
@@ -111,7 +121,7 @@ def requirements_analyzer_agent(initial_requirements):
         4. Suggest 3-5 additional requirements that might have been overlooked
 
         Please provide a structured response with clear headings for each category and a summary of key findings."""
-        
+    llm = get_llm(temperature)    
     prompt = ChatPromptTemplate.from_template(template)
     chain = prompt | llm
     
@@ -150,7 +160,7 @@ def documentation_agent(refined_requirements):
         6. Include a section on future considerations or potential enhancements
 
         Please format the document with clear headings, subheadings, and use bullet points or numbered lists where appropriate."""
-        
+    llm = get_llm(temperature)    
     prompt = ChatPromptTemplate.from_template(template)
     chain = prompt | llm
     
@@ -172,24 +182,17 @@ def process_requirements(project_description, temperature, status_callback):
     Returns:
         A dictionary containing the results from each agent.
     """
-    try:
-        llm = ChatGroq(
-            model="llama-3.1-70b-versatile",
-            groq_api_key=groq,
-            temperature=temperature
-            # other params...
-            )
         status_callback("Project Manager Agent: Generating instructions...")
-        pm_instructions = project_manager_agent(project_description)
+        pm_instructions = project_manager_agent(project_description, temperature)
 
         status_callback("Stakeholder Interview Agent: Gathering initial requirements...")
-        initial_requirements = stakeholder_interview_agent(pm_instructions)
+        initial_requirements = stakeholder_interview_agent(pm_instructions, temperature)
 
         status_callback("Requirements Analyzer Agent: Refining and categorizing requirements...")
-        refined_requirements = requirements_analyzer_agent(initial_requirements)
+        refined_requirements = requirements_analyzer_agent(initial_requirements, temperature)
 
         status_callback("Documentation Agent: Compiling final document...")
-        final_document = documentation_agent(refined_requirements)
+        final_document = documentation_agent(refined_requirements, temperature)
 
         return {
             "pm_instructions": pm_instructions,
