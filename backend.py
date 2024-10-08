@@ -15,7 +15,7 @@ def get_llm(temperature):
         model="llama-3.1-70b-versatile",
         groq_api_key=groq,
         temperature=temperature,
-        max_tokens = 4000
+        max_tokens = 7000
         # other params...
     )
 
