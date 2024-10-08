@@ -177,22 +177,49 @@ def documentation_agent(refined_requirements, temperature):
     Returns:
         A formatted requirements document.
     """
-    template = """As a documentation specialist, compile a functional requirements document (FRD) based on these refined requirements:
+    template = """
+    
+    ou are an expert technical writer specializing in creating clear, concise, and comprehensive Functional Requirements Documents (FRDs).
 
-        Refined Requirements: {refined_requirements}
+**Your task is to generate an FRD based on the analyzed requirements {refined_requirements}.**
 
-        Your task:
-        1. Create a concise and informative executive summary (2-3 paragraphs) highlighting the project's purpose and key features.
-        2. Provide a comprehensive table of contents in a proper readable fromat. Ensure each item in the table of contents start in a new line.
-        3. Structure the FRD with clear sections and headings, following industry best practices.
-        4. Ensure the structure of the Functional Requirements Document should be a real world structure often prepared by the business analysts in big and professional organisations.
-        5. For each section in the document:
-            a. Provide a brief introduction to the section.
-            b. Provide proper numbering, font size and other formatting requirements as per the industry best practices.
-        6. Define all technical terms in a glossary.
-        7. Clearly state any assumptions and constraints that may impact development or implementation.
 
-        Please format the document professionally with clear headings, subheadings, and use bullet points or numbered lists where appropriate. Ensure the language is precise, unambiguous, and easy to understand for both technical and non-technical stakeholders."""
+**Instructions:**
+
+1. **Structure:** Adhere to a standard FRD structure, including:
+    *   **Introduction:** Briefly describe the project and its purpose. Define the scope of the system and the intended audience for this document. Include any relevant definitions or acronyms.
+    *   **Overall Description:** Provide context for the system, including its users, environment, and any assumptions or constraints.
+    *   **Specific Requirements:**  Detail the functional and non-functional requirements, organized by category (e.g., Functionality, User Interface, Security, Performance, Data).
+    *   **Other Requirements:**  Include any legal, regulatory, or operational requirements.
+
+2. **Clarity:**  Ensure all requirements are:
+    *   **Atomic:** Each requirement should express a single, specific need.
+    *   **Concise:** Use clear and unambiguous language, avoiding jargon.
+    *   **Testable:**  Formulate requirements so they can be objectively verified.
+    *   **Traceable:**  Where possible, link requirements back to the original stakeholder input.
+
+3. **Completeness:**
+    *   Address all the requirements provided in the input.
+    *   Resolve any identified ambiguities or conflicts. If unable to resolve, clearly highlight them in the FRD with proposed solutions or options.
+    *   Incorporate any suggested additional requirements from the input, if deemed relevant.
+
+4. **Formatting:**
+    *   Use a professional and easy-to-read format.
+    *   Number requirements for easy reference.
+    *   Use tables, diagrams, or other visual aids where appropriate to enhance understanding.
+
+**Example of how to present a requirement:**
+
+**3.1 Functionality**
+
+*   **FR-001 (High):** The system shall allow users to create new accounts with a unique username and password.
+*   **FR-002 (Medium):** The system shall provide a "forgot password" functionality allowing users to reset their passwords via email.
+
+**Deliverables:**
+
+A complete and well-structured FRD document ready for review by stakeholders.
+    
+    """
     llm = get_llm(temperature)    
     prompt = ChatPromptTemplate.from_template(template)
     chain = prompt | llm
