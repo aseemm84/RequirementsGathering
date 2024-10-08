@@ -11,14 +11,22 @@ def get_llm(temperature):
     Returns an instance of the ChatGroq LLM with the specified temperature.
     """
     return ChatGroq(
-        model="llama3-70b-8192",
+        model="llama-3.1-70b-versatile",
         groq_api_key=groq,
         temperature=temperature,
         max_tokens = 4000
         # other params...
     )
 
-
+def check_for_rate_limit_error(response_content):
+    """Checks if the response content contains a Groq rate limit error."""
+    error_pattern = r"Rate limit reached.*in (\d+m\d+\.\d+s)"
+    match = re.search(error_pattern, response_content)
+    if match:
+        wait_time = match.group(1)
+        # Return an error message string instead of using st.error
+        return f"This app uses free Groq API. API call Rate limit exceeded. Please try again in {wait_time}."
+    return False
 
 def project_manager_agent(project_description, temperature):
     """
@@ -51,9 +59,18 @@ def project_manager_agent(project_description, temperature):
     
     try:
         response = chain.invoke({"project_description": project_description})
-        return response.content
+        # Check for rate limit error in the response content
+        error_message = check_for_rate_limit_error(response.content) 
+        if error_message:
+            return error_message # Return the error string
+        else: 
+            return response.content
     except Exception as e:
-        return f"Error: {str(e)}"
+        error_message = check_for_rate_limit_error(str(e))
+        if error_message:
+            return error_message # Return the error string
+        else: 
+            return f"An error occurred: {e}"
 
 
 def stakeholder_interview_agent(instructions, temperature):
@@ -87,9 +104,18 @@ def stakeholder_interview_agent(instructions, temperature):
     
     try:
         response = chain.invoke({"instructions": instructions})
-        return response.content
+        # Check for rate limit error in the response content
+        error_message = check_for_rate_limit_error(response.content) 
+        if error_message:
+            return error_message # Return the error string
+        else: 
+            return response.content
     except Exception as e:
-        return f"Error: {str(e)}"
+        error_message = check_for_rate_limit_error(str(e))
+        if error_message:
+            return error_message # Return the error string
+        else: 
+            return f"An error occurred: {e}"
 
 
 def requirements_analyzer_agent(initial_requirements, temperature):
@@ -124,9 +150,18 @@ def requirements_analyzer_agent(initial_requirements, temperature):
     
     try:
         response = chain.invoke({"initial_requirements": initial_requirements})
-        return response.content
+        # Check for rate limit error in the response content
+        error_message = check_for_rate_limit_error(response.content) 
+        if error_message:
+            return error_message # Return the error string
+        else: 
+            return response.content
     except Exception as e:
-        return f"Error: {str(e)}"
+        error_message = check_for_rate_limit_error(str(e))
+        if error_message:
+            return error_message # Return the error string
+        else: 
+            return f"An error occurred: {e}"
 
 
 
@@ -163,9 +198,18 @@ def documentation_agent(refined_requirements, temperature):
     
     try:
         response = chain.invoke({"refined_requirements": refined_requirements})
-        return response.content
+        # Check for rate limit error in the response content
+        error_message = check_for_rate_limit_error(response.content) 
+        if error_message:
+            return error_message # Return the error string
+        else: 
+            return response.content
     except Exception as e:
-        return f"Error: {str(e)}"
+        error_message = check_for_rate_limit_error(str(e))
+        if error_message:
+            return error_message # Return the error string
+        else: 
+            return f"An error occurred: {e}"
 
 def process_requirements(project_description, temperature, status_callback):
     """
