@@ -179,7 +179,7 @@ def documentation_agent(refined_requirements, temperature):
     """
     template = """
     
-    ou are an expert technical writer specializing in creating clear, concise, and comprehensive Functional Requirements Documents (FRDs).
+    You are an expert technical writer specializing in creating clear, concise, and comprehensive Functional Requirements Documents (FRDs).
 
 **Your task is to generate an FRD based on the analyzed requirements {refined_requirements}.**
 
